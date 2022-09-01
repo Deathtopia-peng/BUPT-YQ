@@ -2,16 +2,19 @@ package teleDemo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import teleDemo.entities.GetVo;
 import teleDemo.entities.tbInfo;
+import teleDemo.entities.tbuser;
 import teleDemo.mapper.comInfoMapper;
+import teleDemo.mapper.userInfoMapper;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @ResponseBody
@@ -19,7 +22,7 @@ public class teleinfoController {
     @Resource
     comInfoMapper comInfoMapper;
     @Resource
-    teleDemo.mapper.userInfoMapper userInfoMapper;
+    userInfoMapper userInfoMapper;
 
     @GetMapping("/v1/comInfo")
     public GetVo gettbInfo(HttpServletRequest request){
@@ -77,9 +80,15 @@ public class teleinfoController {
         return infoList;
     }
 
-    public void getLatLon(List<tbInfo> list){
+    public List<String> getLatLon(List<tbInfo> list){
+        List<String> result = new ArrayList<>();
         for(tbInfo tbInfo: list){
             System.out.println(tbInfo.getLat() + " "+ tbInfo.getLon());
+            result.add(tbInfo.getLat() + "," + tbInfo.getLon());
         }
+        return result;
     }
+
+
+
 }

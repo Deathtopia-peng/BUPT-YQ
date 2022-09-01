@@ -16,17 +16,13 @@
 
 <body>
 
-<!--    <form class="layui-form" action="">
-        <div class="layui-btn-group demoTable">
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="recent1" onClick="return false">最近24小时</button>
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="recent2" onClick="return false">最近7天</button>
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="recent3" onClick="return false">最近1个月</button>
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="recent4" onClick="return false">最近6个月</button>
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="recent5" onClick="return false">最近1年</button>
-            <button type="submit" class="layui-btn" lay-submit="" lay-filter="recent6" onClick="return false">全部</button>
-        </div>
-    </form> -->
-
+    <div class="demoTable">
+    查询条件：
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
     <table id="disasterPredictionTb" lay-filter="disasterPredictionTb"></table>
     <div class="layui-card-header">
         <!-- <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button> -->
@@ -35,16 +31,16 @@
 
     <script type="text/html" id="barDemo">
         <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a> -->
-        // <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        // <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
-    
+
     <script src="../layui/layui.js" charset="utf-8"></script>
     <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
     <script>
+
 layui.use('table', function(){
   var table = layui.table;
-  
   //第一个实例
  table.render({
                                 elem: '#disasterPredictionTb',
@@ -52,6 +48,7 @@ layui.use('table', function(){
                                 page: true,
 								toolbar: '#toolbarDemo',
 								defaultToolbar: ['filter', 'exports', 'print'],
+                                id: 'testReload',
                                 cols: [
                                     [
                                         //{type:'checkbox', fixed: 'left'},
@@ -85,11 +82,27 @@ layui.use('table', function(){
                                             field: 'phoneNumber',
                                             title: '电话号码',
                                             width: 1000
-                                        }
+                                        },
                                     ]
-                                ]
+                                ],
                             });
-  
+    var $ = layui.$, active = {
+        reload: function () {
+            var demoReload = $('#demoReload');
+
+            table.reload('testReload', {
+                where: {
+                    keyword: demoReload.val()
+                },
+                url:"http://localhost:10002/v1/userInfo/check",
+            });
+        }
+    };
+
+    $('.demoTable .layui-btn').on('click', function () {
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
 });
     </script>
 </body>

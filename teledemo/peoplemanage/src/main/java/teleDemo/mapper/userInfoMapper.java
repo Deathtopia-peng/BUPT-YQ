@@ -2,8 +2,9 @@ package teleDemo.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
-import teleDemo.entities.tbInfo;
+
 import teleDemo.entities.tbuser;
+
 
 import java.util.List;
 
@@ -17,6 +18,20 @@ public interface userInfoMapper {
     })
     List<tbuser> getAlltbUser();
 
+    @Select("select * from eqe.tb_user limit #{pageNum}, #{limit};")
+    @ResultMap(value = "tbUserMap")
+    List<tbuser> gettbUserByPage(@Param("pageNum") int pageNum, @Param("limit")int limit);
+
+    @Select("select * from eqe.tb_user where status = #{userStatus};")
+    @ResultMap(value = "tbUserMap")
+    List<tbuser> checktbUser(@Param("userStatus") int userStatus);
+
+//    @Delete("DELETE FROM eqe.tb_user where id = #{userId}")
+//    Integer deleteUserById(@Param("userId") int userId);
+//
+//    @Insert("insert into eqe.tb_user(id, phone_number, status) values(#{id}, #{phoneNumber}, #{status})")
+//    Integer InsertUser(@Param("user") tbuser user);
+
     @Select("SELECT id FROM eqe.tb_user WHERE status=1;")
     @Results(id="effectedId",value = {
             @Result(column = "id",property = "id",jdbcType = JdbcType.INTEGER)
@@ -29,8 +44,10 @@ public interface userInfoMapper {
     })
     List<Integer> getAllCloseContacts();
 
-    @Select("select * from eqe.tb_user limit #{pageNum}, #{limit};")
+    @Select("select * from  (select * from eqe.tb_user where status = #{userStatus}) as b  limit #{pageNum}, #{limit};")
     @ResultMap(value = "tbUserMap")
-    List<tbuser> gettbUserByPage(@Param("pageNum") int pageNum, @Param("limit")int limit);
+    List<tbuser> checktbUserByPage(@Param("pageNum") int pageNum, @Param("limit")int limit,@Param("userStatus") int userStatus);
 
 }
+
+
