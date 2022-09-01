@@ -3,6 +3,7 @@ package teleDemo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,14 +25,17 @@ public class MapController {
     teleinfoController teleinfoController;
 
     @RequestMapping("/map/test")
-    public List<List<String>> getMapData(){
+    public String toMap(Model model){
         List<List<String>> result;
         List<String> tmp = teleinfoController.getLatLon(teleinfoController.getEffectedLonLat());
 
         result = getProvinceCityDistrict(tmp);
 
+        model.addAttribute("data", result);
 
-        return result;
+
+
+        return "map";
     }
 
     private List<List<String>> getProvinceCityDistrict(List<String> latLonS){
